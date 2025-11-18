@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://poet-haven-backend.onrender.com/',
+  baseURL: 'https://poet-haven-backend.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },
