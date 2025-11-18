@@ -53,7 +53,7 @@ poet-haven/
 
 ### How to Run Locally
 
-#### 1. Clone the repo
+1. Clone the repo
 ```bash
 git clone https://github.com/YOUR_USERNAME/poet-haven.git
 cd poet-haven
