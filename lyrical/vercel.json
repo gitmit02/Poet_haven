@@ -1,0 +1,9 @@
+// lyrical/vercel.json
+{
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}
