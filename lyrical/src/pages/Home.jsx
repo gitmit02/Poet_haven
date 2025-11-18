@@ -58,7 +58,7 @@ const fetchRecentPosts = async () => {
             </span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            A creative sanctuary for poets and writers to share their stories, poems, and literary works with a passionate community.
+            A creative home for poets and writers to share their craft, explore new voices, and grow within a supportive community of storytellers.
           </p>
           
           {isAuthenticated ? (
