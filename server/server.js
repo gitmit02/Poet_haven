@@ -37,8 +37,6 @@ app.use(cors({
   allowedHeaders: "Content-Type,Authorization",
 }));
 
-// Handle preflight requests
-app.options('*', cors());
 
 // ========== 3. BODY PARSER & STATIC FILES ==========
 app.use(express.json({ limit: '10mb' }));
