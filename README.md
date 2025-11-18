@@ -54,11 +54,12 @@ poet-haven/
 ### How to Run Locally
 
 1. Clone the repo
-```bash
+
 git clone https://github.com/YOUR_USERNAME/poet-haven.git
 cd poet-haven
 
 2. Backend (server)
+
 cd server
 npm install
 npm run dev
@@ -66,12 +67,14 @@ npm run dev
 Server runs on: http://localhost:5000
 
 3. Frontend (lyrical folder)
+
 cd ../lyrical
 npm install
 npm run dev
 Frontend runs on: http://localhost:5173
 
 4. Environment Variables
+
 Create .env in server/ folder:
 
 MONGO_URI=your_mongodb_atlas_uri
