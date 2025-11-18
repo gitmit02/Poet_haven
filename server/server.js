@@ -17,7 +17,9 @@ dotenv.config();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+app.get('/', (req, res) => {
+  res.json({ message: 'Poet Haven Backend is live! API endpoints ready.' });
+});
 // ---------- Middleware ----------
 app.use(
   cors({
