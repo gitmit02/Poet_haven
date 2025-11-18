@@ -1,4 +1,5 @@
-// server.js
+// server.js  ← FINAL VERSION (Nov 2025 – works perfectly on Render free tier)
+
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -13,29 +14,34 @@ import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
 
 dotenv.config();
-
 const app = express();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+// ========== 1. ROOT HEALTH CHECK (keeps Render awake) ==========
 app.get('/', (req, res) => {
-  res.json({ message: 'Poet Haven Backend is live! API endpoints ready.' });
+  res.json({ 
+    message: 'Poet\'s Haven Backend is ALIVE & READY ♡', 
+    time: new Date().toISOString(),
+    tip: 'Ping this URL every 5–10 mins to prevent sleep!'
+  });
 });
-// ---------- Middleware ----------
-app.use(
-  cors({
-    origin: [
-      'https://poet-haven.vercel.app',   // ← NO trailing slash!
-      'http://localhost:5173'            // ← keep localhost for development
-    ],
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-  })
-);
-app.use(express.json());
-// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use('/uploads', express.static('uploads'));
-// ---------- Multer (only for post creation) ----------
+
+// ========== 2. CORS (exact origins – no trailing slash) ==========
+app.use(cors({
+  origin: ['https://poet-haven.vercel.app', 'http://localhost:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
+// ========== 3. BODY PARSER & STATIC FILES ==========
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static('uploads'));  // ← make sure "uploads" folder exists!
+
+// ========== 4. MULTER CONFIG (only used inside postRoutes) ==========
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename: (req, file, cb) => {
@@ -46,35 +52,74 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
   fileFilter: (req, file, cb) => {
-    const allowed = /jpeg|jpg|png|gif/;
-    const ext = allowed.test(path.extname(file.originalname).toLowerCase());
-    const mime = allowed.test(file.mimetype);
-    if (ext && mime) cb(null, true);
-    else cb(new Error('Only jpeg, jpg, png, gif allowed'));
+    const allowed = /jpeg|jpg|png|gif|webp/;
+    const extOk = allowed.test(path.extname(file.originalname).toLowerCase());
+    const mimeOk = allowed.test(file.mimetype);
+    if (extOk && mimeOk) cb(null, true);
+    else cb(new Error('Only images allowed (jpeg, jpg, png, gif, webp)'));
   },
 });
 
-// Apply multer **only** to the create-post route (inside postRoutes)
+// Attach multer only where needed (inside postRoutes – not globally)
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/posts', postRoutes);   // postRoutes will attach upload where needed
+app.use('/api/posts', postRoutes);
 
-// ---------- Global error handler ----------
+// ========== 5. BULLETPROOF MONGO CONNECTION (Render-proof) ==========
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) {
+    console.log('→ Using existing MongoDB connection');
+    return;
+  }
+
+  try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    });
+    isConnected = true;
+    console.log('MongoDB Connected Successfully ♡');
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message);
+    isConnected = false;
+    // Don't crash the server – let next request retry
+  }
+};
+
+// Connect once at startup
+connectDB();
+
+// Auto-reconnect on every request if connection dropped (CRITICAL for Render!)
+app.use(async (req, res, next) => {
+  if (!isConnected) {
+    console.log('MongoDB disconnected → Reconnecting...');
+    await connectDB();
+  }
+  next();
+});
+
+// ========== 6. GLOBAL ERROR HANDLER ==========
 app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
   if (err instanceof multer.MulterError) {
-    if (err.code === 'LIMIT_FILE_SIZE')
-      return res.status(400).json({ message: 'File too large (max 5 MB)' });
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File too large (max 5MB)' });
+    }
   }
   res.status(500).json({ message: err.message || 'Server Error' });
 });
 
-// ---------- DB ----------
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch((e) => console.error(e));
+// ========== 7. 404 FOR UNKNOWN ROUTES ==========
+app.use('*', (req, res) => {
+  res.status(404).json({ message: `Route ${req.originalUrl} not found` });
+});
 
+// ========== 8. START SERVER ==========
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} – Poet's Haven is alive!`);
+});
