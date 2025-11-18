@@ -29,12 +29,16 @@ app.get('/', (req, res) => {
 });
 
 // ========== 2. CORS (exact origins – no trailing slash) ==========
+
 app.use(cors({
-  origin: ['https://poet-haven.vercel.app', 'http://localhost:5173'],
+  origin: "https://poet-haven.vercel.app",
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // ========== 3. BODY PARSER & STATIC FILES ==========
 app.use(express.json({ limit: '10mb' }));
