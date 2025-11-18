@@ -21,8 +21,13 @@ const __dirname = path.dirname(__filename);
 // ---------- Middleware ----------
 app.use(
   cors({
-    origin: 'https://poet-haven.vercel.app/',
+    origin: [
+      'https://poet-haven.vercel.app',   // ← NO trailing slash!
+      'http://localhost:5173'            // ← keep localhost for development
+    ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 app.use(express.json());
