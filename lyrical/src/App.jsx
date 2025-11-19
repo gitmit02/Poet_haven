@@ -10,6 +10,8 @@ import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
 import AllPosts from './pages/AllPosts';
 import PostDetail from './pages/PostDetail';
+import NotFound from './pages/NotFound';
+
 
 function App() {
   return (
@@ -46,6 +48,7 @@ function App() {
               } 
             />
             <Route path="/post/:id" element={<PostDetail />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </Router>
