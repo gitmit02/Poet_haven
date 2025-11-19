@@ -14,7 +14,7 @@ const Profile = () => {
   const [error, setError] = useState('');
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(
-    user?.avatar ? `http://localhost:5000${user.avatar}` : ''
+    user?.avatar ? `https://poet-haven-backend.onrender.com${user.avatar}` : ''
   );
 
   const [formData, setFormData] = useState({
@@ -30,7 +30,7 @@ const Profile = () => {
       bio: user?.bio || '',
       role: user?.role || 'poet',
     });
-    setImagePreview(user?.avatar ? `http://localhost:5000${user.avatar}` : '');
+    setImagePreview(user?.avatar ? `https://poet-haven-backend.onrender.com${user.avatar}` : '');
   }, [user]);
 
   useEffect(() => {
