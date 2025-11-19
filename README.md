@@ -4,7 +4,7 @@
 
 Poet's Haven is a full-stack social platform for poets, writers, and storytellers to share their creations — be it heartfelt poems, short stories, or visual art paired with words.
 
-> Live Demo: https://poet-haven.vercel.app/ (replace with your actual link after deploy)
+> Live Demo: https://poet-haven.vercel.app/ 
 
 ---
 
