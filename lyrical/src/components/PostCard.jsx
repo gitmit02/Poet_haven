@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const PostCard = ({ post }) => {
   const author = post.authorId;
-  const base = 'http://localhost:5000';
+  const base = 'https://poet-haven-backend.onrender.com';
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
