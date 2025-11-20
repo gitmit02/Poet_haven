@@ -19,7 +19,7 @@ const PostDetail = () => {
   if (!post) return <p className="text-center">Not found</p>;
 
   const author = post.authorId;
-  const base = 'http://localhost:5000';
+  const base = 'https://poet-haven-backend.onrender.com/';
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -30,9 +30,10 @@ const PostDetail = () => {
 
         <div className="bg-white rounded-xl shadow-lg p-8">
           <h1 className="text-4xl font-bold mb-4">
-            {post.contentType === 'text'
+            /* {post.contentType === 'text'
               ? post.textContent.split('\n')[0]
-              : 'Image Post'}
+              : 'Image Post'} */
+            {post.title}
           </h1>
 
           <div className="flex items-center mb-6">
