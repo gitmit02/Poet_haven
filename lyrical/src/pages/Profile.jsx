@@ -79,13 +79,11 @@ const handleSubmit = async (e) => {
     fd.append('role', formData.role);
     if (imageFile) fd.append('avatar', imageFile);
 
-    // const response = await API.put(`/users/${user._id}`, fd, {
-    //   headers: {
-    //     'Content-Type': 'multipart/form-data',  // THIS WAS MISSING!
-    //   },
-    // });
-
-    const response = await API.put(`/users/${user._id}`, fd);
+    const response = await API.put(`/users/${user._id}`, fd, {
+      headers: {
+        'Content-Type': 'multipart/form-data',  // THIS WAS MISSING!
+      },
+    });
 
     updateUser(response.data);
     setIsEditing(false);
