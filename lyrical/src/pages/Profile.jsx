@@ -79,16 +79,18 @@ const handleSubmit = async (e) => {
     fd.append('role', formData.role);
     if (imageFile) fd.append('avatar', imageFile);
 
-    const response = await API.put(`/users/${user._id}`, fd, {
-      headers: {
-        'Content-Type': 'multipart/form-data',  // THIS WAS MISSING!
-      },
-    });
+    // const response = await API.put(`/users/${user._id}`, fd, {
+    //   headers: {
+    //     'Content-Type': 'multipart/form-data',  // THIS WAS MISSING!
+    //   },
+    // });
+
+    const response = await API.put(`/users/${user._id}`, fd);
 
     updateUser(response.data);
     setIsEditing(false);
     setImageFile(null);
-    setImagePreview(`http://localhost:5000${response.data.avatar}`); // Update preview
+    setImagePreview(`https://poet-haven-backend.onrender.com${response.data.avatar}`);
   } catch (err) {
     setError(err.response?.data?.message || 'Failed to update profile');
   }
@@ -215,7 +217,7 @@ const handleSubmit = async (e) => {
                   onClick={() => {
                     setIsEditing(false);
                     setImageFile(null);
-                    setImagePreview(user?.avatar ? `http://localhost:5000${user.avatar}` : '');
+                    setImagePreview(user?.avatar ? `https://poet-haven-backend.onrender.com${user.avatar}` : '');
                   }}
                   className="px-8 py-4 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition"
                 >
