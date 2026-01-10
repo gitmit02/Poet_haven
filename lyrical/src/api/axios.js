@@ -1,10 +1,6 @@
 import axios from 'axios';
-
 const API = axios.create({
-  baseURL: 'https://poet-haven-backend.onrender.com/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: 'https://poet-haven-backend.onrender.com/api', 
 });
 
 // Add token to requests if it exists
@@ -16,9 +12,7 @@ API.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 // Handle responses and errors
