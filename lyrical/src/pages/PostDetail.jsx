@@ -9,17 +9,18 @@ const PostDetail = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    API.get(`/posts/${id}`).then((res) => {
-      setPost(res.data);
-      setLoading(false);
-    });
+    API.get(`/posts/${id}`)
+      .then((res) => {
+        setPost(res.data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
   }, [id]);
 
   if (loading) return <p className="text-center">Loading…</p>;
   if (!post) return <p className="text-center">Not found</p>;
 
   const author = post.authorId;
-  const base = 'https://poet-haven-backend.onrender.com';
 
   return (
     <div className="min-h-screen py-12 px-4">
@@ -29,29 +30,39 @@ const PostDetail = () => {
         </Link>
 
         <div className="bg-white rounded-xl shadow-lg p-8">
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
 
-            {post.title}
-          </h1>
-
+          {/* Author */}
           <div className="flex items-center mb-6">
             {author?.avatar ? (
-              <img src={`${base}${author.avatar}`} alt="" className="w-12 h-12 rounded-full" />
+              <img
+                src={author.avatar}   // ✅ FIXED
+                alt={author.name}
+                className="w-12 h-12 rounded-full object-cover"
+              />
             ) : (
               <div className="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center text-white">
-                {author?.name?.[0]}
+                {author?.name?.[0]?.toUpperCase()}
               </div>
             )}
+
             <div className="ml-3">
               <p className="font-semibold">{author?.name}</p>
-              <p className="text-sm text-gray-500">{author?.role}</p>
+              <p className="text-sm text-gray-500 capitalize">{author?.role}</p>
             </div>
           </div>
 
-          {post.contentType === 'image' ? (
-            <img src={`${base}${post.imageUrl}`} alt="" className="w-full rounded-lg" />
+          {/* Content */}
+          {post.contentType === 'image' && post.imageUrl ? (
+            <img
+              src={post.imageUrl}   // ✅ FIXED
+              alt={post.title}
+              className="w-full rounded-lg"
+            />
           ) : (
-            <pre className="whitespace-pre-wrap font-sans text-lg">{post.textContent}</pre>
+            <pre className="whitespace-pre-wrap font-sans text-lg">
+              {post.textContent}
+            </pre>
           )}
         </div>
       </div>
