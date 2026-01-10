@@ -13,9 +13,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(
-    user?.avatar ? `https://poet-haven-backend.onrender.com${user.avatar}` : ''
-  );
+const [imagePreview, setImagePreview] = useState(user?.avatar || '');
+
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -24,14 +23,16 @@ const Profile = () => {
   });
 
   // Update form when user changes (e.g., after login)
-  useEffect(() => {
-    setFormData({
-      name: user?.name || '',
-      bio: user?.bio || '',
-      role: user?.role || 'poet',
-    });
-    setImagePreview(user?.avatar ? `https://poet-haven-backend.onrender.com${user.avatar}` : '');
-  }, [user]);
+useEffect(() => {
+  setFormData({
+    name: user?.name || '',
+    bio: user?.bio || '',
+    role: user?.role || 'poet',
+  });
+
+  setImagePreview(user?.avatar || '');
+}, [user]);
+
 
   useEffect(() => {
     if (user?._id) fetchUserPosts();
@@ -72,6 +73,7 @@ const Profile = () => {
 const handleSubmit = async (e) => {
   e.preventDefault();
   setError('');
+
   try {
     const fd = new FormData();
     fd.append('name', formData.name);
@@ -79,20 +81,17 @@ const handleSubmit = async (e) => {
     fd.append('role', formData.role);
     if (imageFile) fd.append('avatar', imageFile);
 
-    const response = await API.put(`/users/${user._id}`, fd, {
-      headers: {
-        'Content-Type': 'multipart/form-data',  // THIS WAS MISSING!
-      },
-    });
+    const response = await API.put(`/users/${user._id}`, fd);
 
     updateUser(response.data);
     setIsEditing(false);
     setImageFile(null);
-    setImagePreview(`https://poet-haven-backend.onrender.com${response.data.avatar}`);
+    setImagePreview(response.data.avatar || '');
   } catch (err) {
     setError(err.response?.data?.message || 'Failed to update profile');
   }
 };
+
 
   return (
     <div className="min-h-screen py-12 px-4 bg-gray-50">
@@ -215,7 +214,7 @@ const handleSubmit = async (e) => {
                   onClick={() => {
                     setIsEditing(false);
                     setImageFile(null);
-                    setImagePreview(user?.avatar ? `https://poet-haven-backend.onrender.com${user.avatar}` : '');
+                    setImagePreview(user?.avatar ? `${user.avatar}` : '');
                   }}
                   className="px-8 py-4 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition"
                 >
