@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 const PostCard = ({ post }) => {
   const author = post.authorId;
-  const base = 'https://poet-haven-backend.onrender.com';
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
@@ -18,7 +17,7 @@ const PostCard = ({ post }) => {
             {new Date(post.createdAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
-              day: 'numeric'
+              day: 'numeric',
             })}
           </span>
         </div>
@@ -32,7 +31,7 @@ const PostCard = ({ post }) => {
         <div className="flex items-center mb-4">
           {author?.avatar ? (
             <img
-              src={`${base}${author.avatar}`}
+              src={author.avatar}   // ✅ FIXED
               alt={author.name}
               className="w-8 h-8 rounded-full object-cover ring-2 ring-purple-100"
             />
@@ -41,6 +40,7 @@ const PostCard = ({ post }) => {
               {author?.name?.[0]?.toUpperCase() || 'A'}
             </div>
           )}
+
           <div className="ml-2">
             <p className="text-gray-700 font-medium text-sm">
               {author?.name || 'Anonymous'}
@@ -55,7 +55,7 @@ const PostCard = ({ post }) => {
         {post.contentType === 'image' && post.imageUrl ? (
           <div className="mb-4">
             <img
-              src={`${base}${post.imageUrl}`}
+              src={post.imageUrl}   // ✅ FIXED
               alt={post.title}
               className="w-full h-48 object-cover rounded-lg shadow-sm"
             />
@@ -73,7 +73,7 @@ const PostCard = ({ post }) => {
           </span>
           <Link
             to={`/post/${post._id}`}
-            className="text-purple-600 hover:text-purple-700 font-medium text-sm transition flex items-center gap-1"
+            className="text-purple-600 hover:text-purple-700 font-medium text-sm transition"
           >
             Read More
           </Link>
